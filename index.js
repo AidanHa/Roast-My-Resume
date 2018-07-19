@@ -1,8 +1,29 @@
 
+const config = require('config');
 const Joi = require('joi');
+const logger = require('./logger');
+const auth = require('./Authenticate');
+const helmet = require('helmet');
+const morgan = require('morgan');
 const express = require('express');
 const app = express();
-app.use(express.json());
+
+
+app.use(express.json());//INSTALL MIDDLEWARE FUNCTION app.used is done everytime we get a request. Middleware populate req.body
+app.use(express.urlencoded({extended: true})); //key=value&key=value
+app.use(express.static('public'));
+app.use(logger);
+app.use(auth);
+app.use(helmet());
+if (app.get('env') === 'development') {
+  app.use(morgan('tiny'));
+  console.log("Morgan Enabled");
+}
+
+//Configuration
+console.log('Application Name: ' + config.get('name'));
+console.log('Mail Server ' + config.get('mail.host'));
+console.log('Mail PW: ' + config.get('mail.password'));
 
 const tradeTypes = [
     {id: 1, name: 'others'},
@@ -17,10 +38,16 @@ const tradeTypes = [
     {id: 10, name: 'cash'},
 ];
 
-app.get('/api/tradeTypes', (req, res) => {
+  app.get('/api/tradeTypes', (req, res) => {
     res.send(tradeTypes);
   });
-  
+
+  app.get('/api/tradeTypes/:id', (req, res) => {
+    const tradeType = tradeTypes.find(c => c.id === parseInt(req.params.id));
+    if (!tradeType) return res.status(404).send('The Trade Type with the given ID was not found.');
+    res.send(tradeType);
+  });
+
   app.post('/api/tradeTypes', (req, res) => {
     const { error } = validateTradeType(req.body); 
     if (error) return res.status(400).send(error.details[0].message);
@@ -53,13 +80,7 @@ app.get('/api/tradeTypes', (req, res) => {
   
     res.send(tradeType);
   });
-  
-  app.get('/api/tradeTypes/:id', (req, res) => {
-    const tradeType = tradeTypes.find(c => c.id === parseInt(req.params.id));
-    if (!tradeType) return res.status(404).send('The Trade Type with the given ID was not found.');
-    res.send(tradeType);
-  });
-  
+    
   function validateTradeType(tradeType) {
     const schema = {
       name: Joi.string().min(3).required()

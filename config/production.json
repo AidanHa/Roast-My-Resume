@@ -1,0 +1,7 @@
+{
+    "name": "TrendingTradesProd",
+    "mail": {
+        "host": "prod-mail-server"
+    }
+
+}
