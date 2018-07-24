@@ -1,93 +1,38 @@
 
 const config = require('config');
+const startupDebugger = require('debug')('app:startup');
+const dbDebugger = require('debug')('app:db');
 const Joi = require('joi');
-const logger = require('./logger');
-const auth = require('./Authenticate');
+const logger = require('./middleware/logger');
+const auth = require('./middleware/Authenticate');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const express = require('express');
 const app = express();
+const tradeTypesRouter = require('./routes/tradeTypes');
+const homeRouter = require('./routes/home');
+app.set('view engine', 'pug');
+app.set('views', './views'); //all templates here
 
-
-app.use(express.json());//INSTALL MIDDLEWARE FUNCTION app.used is done everytime we get a request. Middleware populate req.body
+app.use(express.json());//built in middlewear
 app.use(express.urlencoded({extended: true})); //key=value&key=value
 app.use(express.static('public'));
 app.use(logger);
 app.use(auth);
-app.use(helmet());
-if (app.get('env') === 'development') {
+app.use('/api/tradeTypes', tradeTypesRouter);
+app.use('/', homeRouter);
+app.use(helmet());//INSTALL MIDDLEWARE FUNCTION app.used is done everytime we get a request. Middleware populate req.body
+
+
+if (app.get('env') === 'development') {//TO USE, set env='development'
   app.use(morgan('tiny'));
-  console.log("Morgan Enabled");
+  startupDebugger("Morgan Enabled...");//to use, set DEBUG=app:* or DEBUG=app:startup
 }
 
-//Configuration
+//Configuration with npm config
 console.log('Application Name: ' + config.get('name'));
 console.log('Mail Server ' + config.get('mail.host'));
 console.log('Mail PW: ' + config.get('mail.password'));
 
-const tradeTypes = [
-    {id: 1, name: 'others'},
-    {id: 2, name: 'clothing'},
-    {id: 3, name: 'shoes'},
-    {id: 4, name: 'bag'},
-    {id: 5, name: 'electronics'},
-    {id: 6, name: 'games'},
-    {id: 7, name: 'collectibles'},
-    {id: 8, name: 'rare items'},
-    {id: 9, name: 'sport gear'},
-    {id: 10, name: 'cash'},
-];
-
-  app.get('/api/tradeTypes', (req, res) => {
-    res.send(tradeTypes);
-  });
-
-  app.get('/api/tradeTypes/:id', (req, res) => {
-    const tradeType = tradeTypes.find(c => c.id === parseInt(req.params.id));
-    if (!tradeType) return res.status(404).send('The Trade Type with the given ID was not found.');
-    res.send(tradeType);
-  });
-
-  app.post('/api/tradeTypes', (req, res) => {
-    const { error } = validateTradeType(req.body); 
-    if (error) return res.status(400).send(error.details[0].message);
-  
-    const tradeType = {
-      id: tradeTypes.length + 1,
-      name: req.body.name
-    };
-    tradeTypes.push(tradeType);
-    res.send(tradeType);
-  });
-  
-  app.put('/api/tradeTypes/:id', (req, res) => {
-    const tradeType = tradeTypes.find(c => c.id === parseInt(req.params.id));
-    if (!tradeType) return res.status(404).send('The Trade Type with the given ID was not found.');
-  
-    const { error } = validateTradeType(req.body); 
-    if (error) return res.status(400).send(error.details[0].message);
-    
-    tradeType.name = req.body.name; 
-    res.send(tradeType);
-  });
-  
-  app.delete('/api/tradeTypes/:id', (req, res) => {
-    const tradeType = tradeTypes.find(c => c.id === parseInt(req.params.id));
-    if (!tradeType) return res.status(404).send('The Trade Type with the given ID was not found.');
-  
-    const index = tradeTypes.indexOf(tradeType);
-    tradeTypes.splice(index, 1);
-  
-    res.send(tradeType);
-  });
-    
-  function validateTradeType(tradeType) {
-    const schema = {
-      name: Joi.string().min(3).required()
-    };
-  
-    return Joi.validate(tradeType, schema);
-  }
-  
-  const port = process.env.PORT || 3000;
-  app.listen(port, () => console.log(`Listening on port ${port}...`));
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`Listening on port ${port}...`));
