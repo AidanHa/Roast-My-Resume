@@ -33,7 +33,7 @@ if (app.get('env') === 'development') {//TO USE, set env='development'
 //Configuration with npm config
 console.log('Application Name: ' + config.get('name'));
 console.log('Mail Server ' + config.get('mail.host'));
-console.log('Mail PW: ' + config.get('mail.password'));
+console.log('Mail PW: ' + config.get('mail.password')); //set password="password"
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}...`));
