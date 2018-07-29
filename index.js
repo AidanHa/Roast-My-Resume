@@ -9,6 +9,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const express = require('express');
 const app = express();
+//add mongo implementation
 const tradeTypesRouter = require('./routes/tradeTypes');
 const homeRouter = require('./routes/home');
 app.set('view engine', 'pug');
