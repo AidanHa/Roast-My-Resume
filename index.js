@@ -20,7 +20,7 @@ app.set('views', './views'); //all templates here
 //Adding Mongo DB stuff here
 mongoose.connect('mongodb://localhost/playground').then(() => console.log('Connected to database')).catch((err) => console.error('Could not connect to mongodb', err));
 
-const tradeTypeSchema = new mongoose.Schema({
+const tradesSchema = new mongoose.Schema({
   name: String,
   category: String,
   seller: String,
@@ -28,14 +28,32 @@ const tradeTypeSchema = new mongoose.Schema({
   date: { type: Date, default: Date.now},
 
 });
+/*
+async function createTrade() {
+  const Trades = mongoose.model('tradeTypes', tradesSchema);
+  const trades = new Trades({
+    name: "League of Legends Poster",
+    category: "Others",
+    seller: "Aidan",
+    price: 35,
+  });
+  const result = await trades.save();
+  console.log(result);
+}
+*/
+async function createTrade() {
+  const Trades = mongoose.model('tradeTypes', tradesSchema);
+  const trades = new Trades({
+    name: "Sony Earbuds",
+    category: "Electronics",
+    seller: "Jonathan",
+    price: 20,
+  });
+  const result = await trades.save();
+  console.log(result);
+}
+createTrade();
 
-const TradeTypes = mongoose.model('tradeTypes', tradeTypeSchema);
-const tradeTypes = new TradeTypes({
-  name: "League of Legends Poster",
-  category: "Others",
-  seller: "Aidan",
-  price: 35,
-});
 
 app.use(express.json());//built in middlewear
 app.use(express.urlencoded({extended: true})); //key=value&key=value
