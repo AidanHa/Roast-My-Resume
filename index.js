@@ -22,10 +22,19 @@ mongoose.connect('mongodb://localhost/playground').then(() => console.log('Conne
 
 const tradeTypeSchema = new mongoose.Schema({
   name: String,
+  category: String,
   seller: String,
   price: Number,
   date: { type: Date, default: Date.now},
 
+});
+
+const TradeTypes = mongoose.model('tradeTypes', tradeTypeSchema);
+const tradeTypes = new TradeTypes({
+  name: "League of Legends Poster",
+  category: "Others",
+  seller: "Aidan",
+  price: 35,
 });
 
 app.use(express.json());//built in middlewear
