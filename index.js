@@ -1,4 +1,5 @@
 
+const mongoose = require('mongoose');
 const config = require('config');
 const startupDebugger = require('debug')('app:startup');
 const dbDebugger = require('debug')('app:db');
@@ -15,7 +16,18 @@ const homeRouter = require('./routes/home');
 app.set('view engine', 'pug');
 app.set('views', './views'); //all templates here
 
+
 //Adding Mongo DB stuff here
+mongoose.connect('mongodb://localhost/playground').then(() => console.log('Connected to database')).catch((err) => console.error('Could not connect to mongodb', err));
+
+const tradeTypeSchema = new mongoose.Schema({
+  name: String,
+  seller: String,
+  price: Number,
+  date: { type: Date, default: Date.now},
+
+});
+
 app.use(express.json());//built in middlewear
 app.use(express.urlencoded({extended: true})); //key=value&key=value
 app.use(express.static('public'));
