@@ -35,28 +35,41 @@ if (app.get('env') === 'development') {//TO USE, set env='development'
 app.use('/api/tradeTypes', tradeTypesRouter);
 app.use('/', homeRouter);
 
+const tradeTypesEnum = [//array of categories
+  'Others',
+  'Clothing',
+  'Shoes',
+  'Bag',
+  'Electronics',
+  'Games',
+  'Collectibles',
+  'Rare items',
+  'Sport gear',
+  'Cash',
+];
 //schema for Mongo DB
 const tradesSchema = new mongoose.Schema({
-  name: {type: String, required: true},
-  category: {type: String, required: true},
+  name: {type: String, required: true, minlength: 1, maxlength: 30},
+  category: {type: String, required: true, enum: tradeTypesEnum},
   seller: String,
-  price: {type: Number, required: true},
+  //price: {type: Number, required: function(){return true; }},
+  price: {
+    type: Number,
+    validate: {
+      isAsync: true,
+      validator: function(callback) {
+        setTimeout(() =>{
+          const result = true;
+          callback(result);
+        }, 1000);
+      },
+      message: "Price is correct"
+    } 
+  },
   date: { type: Date, default: Date.now},
   description: String,
 });
 
-const tradeTypes = [//array of categories
-  {id: 1, name: 'others'},
-  {id: 2, name: 'clothing'},
-  {id: 3, name: 'shoes'},
-  {id: 4, name: 'bag'},
-  {id: 5, name: 'electronics'},
-  {id: 6, name: 'games'},
-  {id: 7, name: 'collectibles'},
-  {id: 8, name: 'rare items'},
-  {id: 9, name: 'sport gear'},
-  {id: 10, name: 'cash'},
-];
 //Configuration with npm config
 console.log('Application Name: ' + config.get('name'));
 console.log('Mail Server ' + config.get('mail.host'));
