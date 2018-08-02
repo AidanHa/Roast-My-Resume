@@ -37,10 +37,10 @@ app.use('/', homeRouter);
 
 //schema for Mongo DB
 const tradesSchema = new mongoose.Schema({
-  name: String,
-  category: String,
+  name: {type: String, required: true},
+  category: {type: String, required: true},
   seller: String,
-  price: Number,
+  price: {type: Number, required: true},
   date: { type: Date, default: Date.now},
   description: String,
 });
@@ -70,23 +70,65 @@ app.listen(port, () => console.log(`Listening on port ${port}...`));
 mongoose.connect('mongodb://localhost/playground').then(() => console.log('Connected to database')).catch((err) => console.error('Could not connect to mongodb', err));
 
 const Trades = mongoose.model('Trades', tradesSchema);//database w model
+
 async function createTrade(nameReq, categoryReq, sellerReq, priceReq, descriptionReq) {
  
-  const trades = new Trades({
+  const trade = new Trades({
     name: nameReq,
     category: categoryReq,
     seller: sellerReq,
     price: priceReq,
     description: descriptionReq,
   });
-  const result = await trades.save();
-  console.log(result);
+  try {
+    const result = await trade.save();
+    console.log(result);
+    //await trade.validate();
+  } catch(ex) {
+    console.log(ex.message);
+  }
+  
 }
 async function getTrade() {
-  //const trades = await Trades.find({seller: 'Aidan'}).limit(10).sort({seller: 1}).select({name: 1, seller: 1});
-  //const trades = await Trades.find({price: {$gte: 10, $lte: 40}}).limit(10).sort({seller: 1}).select({name: 1, seller: 1});
-  const trades = await Trades.find({price: {$in: [10, 15, 20]}}).limit(10).sort({seller: 1}).select({name: 1, seller: 1});
-  console.log(trades);
+  const pageNumber = 2;
+  const pageSize = 10;
+  //const trade = await Trades.find({seller: 'Aidan'}).limit(10).sort({seller: 1}).select({name: 1, seller: 1});
+  //const trade = await Trades.find({price: {$gte: 10, $lte: 40}}).limit(10).sort({seller: 1}).select({name: 1, seller: 1});
+  //const trade = await Trades.find({price: {$in: [10, 15, 20]}}).limit(10).sort({seller: 1}).select({name: 1, seller: 1});
+  //const trade = await Trades.find().or([{seller: 'Aidan'}, {price: 40}]);
+  //const trade = await Trades.find({seller: /^Ai/});
+  //const trade = await Trades.find({seller: /n$/});
+  //const trade = await Trades.find({seller: /.*an.*/}).count();
+  //const trade = await Trades.find({seller: /.*an.*/}).skip((pageNumber - 1) * pageSize).limit(pageSize);
+  const trade = await Trades.find({});
+  console.log(trade);
+}
+/*
+async function updateTrade(id, newName) {//query first
+  const trade = await Trades.findById(id);
+
+  if (!trade) {
+    return;
+  }
+  trade.name = newName;
+  const result = await trade.save();
+  console.log(result);
+}*/
+async function updateTrade(nameReq, newName) {//update first
+  const trade = await Trades.update({name: nameReq}, {
+    $set: {
+      name: newName
+    }
+  });
+  console.log(trade);
+
+}
+async function removeTrade(id) {//update first
+  const trade = await Trades.deleteOne({_id: id});
+  console.log(trade);
 }
 //createTrade('Sony Earbuds', "Electronics", "Jonathan", 40, "High quality extra base Sony Earbuds");
-getTrade();
+//createTrade('Cool Poster', "Others", "Aidan", 20, "Team Liquid Poster");
+//getTrade();
+//updateTrade('Cool Poster', 'TL Poster');
+//removeTrade('5b61a9363bf32b58747ec5c1');
