@@ -35,6 +35,19 @@ if (app.get('env') === 'development') {//TO USE, set env='development'
 app.use('/api/tradeTypes', tradeTypesRouter);
 app.use('/', homeRouter);
 
+
+//Configuration with npm config
+console.log('Application Name: ' + config.get('name'));
+console.log('Mail Server ' + config.get('mail.host'));
+console.log('Mail PW: ' + config.get('mail.password')); //set password="password"
+
+//connect to server
+mongoose.connect('mongodb://localhost/TrendingTrades').then(() => console.log('Connected to database')).catch((err) => console.error('Could not connect to mongodb', err));
+
+//listen on express server
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`Listening on port ${port}...`));
+
 const tradeTypesEnum = [//array of categories
   'Others',
   'Clothing',
@@ -70,78 +83,71 @@ const tradesSchema = new mongoose.Schema({
   description: String,
 });
 
-//Configuration with npm config
-console.log('Application Name: ' + config.get('name'));
-console.log('Mail Server ' + config.get('mail.host'));
-console.log('Mail PW: ' + config.get('mail.password')); //set password="password"
 
-//listen on express server
-const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Listening on port ${port}...`));
 
-//connect to server
-mongoose.connect('mongodb://localhost/playground').then(() => console.log('Connected to database')).catch((err) => console.error('Could not connect to mongodb', err));
+// //connect to server
+// mongoose.connect('mongodb://localhost/playground').then(() => console.log('Connected to database')).catch((err) => console.error('Could not connect to mongodb', err));
 
-const Trades = mongoose.model('Trades', tradesSchema);//database w model
+// const Trades = mongoose.model('Trades', tradesSchema);//database w model
 
-async function createTrade(nameReq, categoryReq, sellerReq, priceReq, descriptionReq) {
+// async function createTrade(nameReq, categoryReq, sellerReq, priceReq, descriptionReq) {
  
-  const trade = new Trades({
-    name: nameReq,
-    category: categoryReq,
-    seller: sellerReq,
-    price: priceReq,
-    description: descriptionReq,
-  });
-  try {
-    const result = await trade.save();
-    console.log(result);
-    //await trade.validate();
-  } catch(ex) {
-    console.log(ex.message);
-  }
+//   const trade = new Trades({
+//     name: nameReq,
+//     category: categoryReq,
+//     seller: sellerReq,
+//     price: priceReq,
+//     description: descriptionReq,
+//   });
+//   try {
+//     const result = await trade.save();
+//     console.log(result);
+//     //await trade.validate();
+//   } catch(ex) {
+//     console.log(ex.message);
+//   }
   
-}
-async function getTrade() {
-  const pageNumber = 2;
-  const pageSize = 10;
-  //const trade = await Trades.find({seller: 'Aidan'}).limit(10).sort({seller: 1}).select({name: 1, seller: 1});
-  //const trade = await Trades.find({price: {$gte: 10, $lte: 40}}).limit(10).sort({seller: 1}).select({name: 1, seller: 1});
-  //const trade = await Trades.find({price: {$in: [10, 15, 20]}}).limit(10).sort({seller: 1}).select({name: 1, seller: 1});
-  //const trade = await Trades.find().or([{seller: 'Aidan'}, {price: 40}]);
-  //const trade = await Trades.find({seller: /^Ai/});
-  //const trade = await Trades.find({seller: /n$/});
-  //const trade = await Trades.find({seller: /.*an.*/}).count();
-  //const trade = await Trades.find({seller: /.*an.*/}).skip((pageNumber - 1) * pageSize).limit(pageSize);
-  const trade = await Trades.find({});
-  console.log(trade);
-}
-/*
-async function updateTrade(id, newName) {//query first
-  const trade = await Trades.findById(id);
+// }
+// async function getTrade() {
+//   const pageNumber = 2;
+//   const pageSize = 10;
+//   //const trade = await Trades.find({seller: 'Aidan'}).limit(10).sort({seller: 1}).select({name: 1, seller: 1});
+//   //const trade = await Trades.find({price: {$gte: 10, $lte: 40}}).limit(10).sort({seller: 1}).select({name: 1, seller: 1});
+//   //const trade = await Trades.find({price: {$in: [10, 15, 20]}}).limit(10).sort({seller: 1}).select({name: 1, seller: 1});
+//   //const trade = await Trades.find().or([{seller: 'Aidan'}, {price: 40}]);
+//   //const trade = await Trades.find({seller: /^Ai/});
+//   //const trade = await Trades.find({seller: /n$/});
+//   //const trade = await Trades.find({seller: /.*an.*/}).count();
+//   //const trade = await Trades.find({seller: /.*an.*/}).skip((pageNumber - 1) * pageSize).limit(pageSize);
+//   const trade = await Trades.find({});
+//   console.log(trade);
+// }
+// /*
+// async function updateTrade(id, newName) {//query first
+//   const trade = await Trades.findById(id);
 
-  if (!trade) {
-    return;
-  }
-  trade.name = newName;
-  const result = await trade.save();
-  console.log(result);
-}*/
-async function updateTrade(nameReq, newName) {//update first
-  const trade = await Trades.update({name: nameReq}, {
-    $set: {
-      name: newName
-    }
-  });
-  console.log(trade);
+//   if (!trade) {
+//     return;
+//   }
+//   trade.name = newName;
+//   const result = await trade.save();
+//   console.log(result);
+// }*/
+// async function updateTrade(nameReq, newName) {//update first
+//   const trade = await Trades.update({name: nameReq}, {
+//     $set: {
+//       name: newName
+//     }
+//   });
+//   console.log(trade);
 
-}
-async function removeTrade(id) {//update first
-  const trade = await Trades.deleteOne({_id: id});
-  console.log(trade);
-}
-//createTrade('Sony Earbuds', "Electronics", "Jonathan", 40, "High quality extra base Sony Earbuds");
-//createTrade('Cool Poster', "Others", "Aidan", 20, "Team Liquid Poster");
-//getTrade();
-//updateTrade('Cool Poster', 'TL Poster');
-//removeTrade('5b61a9363bf32b58747ec5c1');
+// }
+// async function removeTrade(id) {//update first
+//   const trade = await Trades.deleteOne({_id: id});
+//   console.log(trade);
+// }
+// //createTrade('Sony Earbuds', "Electronics", "Jonathan", 40, "High quality extra base Sony Earbuds");
+// //createTrade('Cool Poster', "Others", "Aidan", 20, "Team Liquid Poster");
+// //getTrade();
+// //updateTrade('Cool Poster', 'TL Poster');
+// //removeTrade('5b61a9363bf32b58747ec5c1');

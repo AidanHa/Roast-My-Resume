@@ -1,65 +1,71 @@
 
 const config = require('config');
-const startupDebugger = require('debug')('app:startup');
-const dbDebugger = require('debug')('app:db');
 const Joi = require('joi');
-const helmet = require('helmet');
-const morgan = require('morgan');
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 
-const tradeTypes = [//array of categories
-    {id: 1, name: 'others'},
-    {id: 2, name: 'clothing'},
-    {id: 3, name: 'shoes'},
-    {id: 4, name: 'bag'},
-    {id: 5, name: 'electronics'},
-    {id: 6, name: 'games'},
-    {id: 7, name: 'collectibles'},
-    {id: 8, name: 'rare items'},
-    {id: 9, name: 'sport gear'},
-    {id: 10, name: 'cash'},
+const tradeTypesEnum = [//array of categories
+  'Others',
+  'Clothing',
+  'Shoes',
+  'Bag',
+  'Electronics',
+  'Games',
+  'Collectibles',
+  'Rare items',
+  'Sport gear',
+  'Cash',
 ];
 
-  router.get('/', (req, res) => {
+const tradesTypeSchema = new mongoose.Schema({
+  name: {type: String, required: true, minlength: 1, maxlength: 30},
+});
+
+const TradeType = mongoose.model('Trade Types', tradesTypeSchema);//database w model
+
+
+  router.get('/', async (req, res) => {
+    const tradeTypes = await TradeType.find().sort('name');
     res.send(tradeTypes);
   });
 
-  router.get('/:id', (req, res) => {
-    const tradeType = tradeTypes.find(c => c.id === parseInt(req.params.id));
-    if (!tradeType) return res.status(404).send('The Trade Type with the given ID was not found.');
+  router.get('/:id', async (req, res) => {
+    const tradeType = await TradeType.find({name: req.params.id});
+    console.log(tradeType);
+    if (!tradeType) {
+      return res.status(404).send('The Trade Type with the given ID was not found... Please Try again');
+    }
     res.send(tradeType);
   });
 
-  router.post('/', (req, res) => {
+  router.post('/', async (req, res) => {
     const { error } = validateTradeType(req.body); 
     if (error) return res.status(400).send(error.details[0].message);
   
-    const tradeType = {
-      id: tradeTypes.length + 1,
+    let tradeType = new TradeType({
       name: req.body.name
-    };
-    tradeTypes.push(tradeType);
+    });
+    tradeType = await tradeType.save();
     res.send(tradeType);
   });
   
-  router.put('/:id', (req, res) => {
-    const tradeType = tradeTypes.find(c => c.id === parseInt(req.params.id));
-    if (!tradeType) return res.status(404).send('The Trade Type with the given ID was not found.');
-  
+  router.put('/:id', async (req, res) => {
+
     const { error } = validateTradeType(req.body); 
     if (error) return res.status(400).send(error.details[0].message);
-    
-    tradeType.name = req.body.name; 
+
+    const tradeType = await TradeType.findByIdAndUpdate(req.params.id, {name: req.body.name}, {new: true});
+   
+    if (!tradeType) {
+      return res.status(404).send("The Trade Type with the given ID was not found.");
+    }
     res.send(tradeType);
   });
   
-  router.delete('/:id', (req, res) => {
-    const tradeType = tradeTypes.find(c => c.id === parseInt(req.params.id));
+  router.delete('/:id', async (req, res) => {
+    const tradeType = await TradeType.findByIdAndRemove(req.params.id, {name: req.body.name}, {new: true});
     if (!tradeType) return res.status(404).send('The Trade Type with the given ID was not found.');
-  
-    const index = tradeTypes.indexOf(tradeType);
-    tradeTypes.splice(index, 1);
   
     res.send(tradeType);
   });
