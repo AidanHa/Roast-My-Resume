@@ -30,8 +30,8 @@ const TradeType = mongoose.model('Trade Types', tradesTypeSchema);//database w m
     res.send(tradeTypes);
   });
 
-  router.get('/:id', async (req, res) => {
-    const tradeType = await TradeType.find({name: req.params.id});
+  router.get('/:name', async (req, res) => {
+    const tradeType = await TradeType.find({name: req.params.name});//PARAMS NOT PARAM
     console.log(tradeType);
     if (!tradeType) {
       return res.status(404).send('The Trade Type with the given ID was not found... Please Try again');
