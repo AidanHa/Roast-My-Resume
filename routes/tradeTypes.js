@@ -18,11 +18,11 @@ const tradeTypesEnum = [//array of categories
   'Cash',
 ];
 
-const tradesTypeSchema = new mongoose.Schema({
-  name: {type: String, required: true, minlength: 1, maxlength: 30},
+const tradeTypeSchema = new mongoose.Schema({
+  name: {type: String, enum: tradeTypesEnum, required: true, minlength: 1, maxlength: 30},
 });
 
-const TradeType = mongoose.model('Trade Types', tradesTypeSchema);//database w model
+const TradeType = mongoose.model('Trade Types', tradeTypeSchema);//database w model
 
 
   router.get('/', async (req, res) => {
@@ -34,7 +34,7 @@ const TradeType = mongoose.model('Trade Types', tradesTypeSchema);//database w m
     const tradeType = await TradeType.find({name: req.params.name});//PARAMS NOT PARAM
     console.log(tradeType);
     if (!tradeType) {
-      return res.status(404).send('The Trade Type with the given ID was not found... Please Try again');
+      return res.status(404).send('The Trade Type with the given name was not found... Please Try again');
     }
     res.send(tradeType);
   });

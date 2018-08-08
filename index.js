@@ -13,6 +13,7 @@ const express = require('express');
 const logger = require('./middleware/logger');
 const auth = require('./middleware/Authenticate');
 const tradeTypesRouter = require('./routes/tradeTypes');
+const tradersRouter = require('./routes/traders');
 const homeRouter = require('./routes/home');
 
 //create app object + set/use middleware
@@ -33,13 +34,15 @@ if (app.get('env') === 'development') {//TO USE, set env='development'
 }
 
 app.use('/api/tradeTypes', tradeTypesRouter);
+app.use('/api/traders', tradersRouter);
 app.use('/', homeRouter);
 
 
+
 //Configuration with npm config
-console.log('Application Name: ' + config.get('name'));
-console.log('Mail Server ' + config.get('mail.host'));
-console.log('Mail PW: ' + config.get('mail.password')); //set password="password"
+//console.log('Application Name: ' + config.get('name'));
+//console.log('Mail Server ' + config.get('mail.host'));
+//console.log('Mail PW: ' + config.get('mail.password')); //set password="password"
 
 //connect to server
 mongoose.connect('mongodb://localhost/TrendingTrades').then(() => console.log('Connected to database')).catch((err) => console.error('Could not connect to mongodb', err));
@@ -48,40 +51,40 @@ mongoose.connect('mongodb://localhost/TrendingTrades').then(() => console.log('C
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}...`));
 
-const tradeTypesEnum = [//array of categories
-  'Others',
-  'Clothing',
-  'Shoes',
-  'Bag',
-  'Electronics',
-  'Games',
-  'Collectibles',
-  'Rare items',
-  'Sport gear',
-  'Cash',
-];
-//schema for Mongo DB
-const tradesSchema = new mongoose.Schema({
-  name: {type: String, required: true, minlength: 1, maxlength: 30},
-  category: {type: String, required: true, enum: tradeTypesEnum},
-  seller: String,
-  //price: {type: Number, required: function(){return true; }},
-  price: {
-    type: Number,
-    validate: {
-      isAsync: true,
-      validator: function(callback) {
-        setTimeout(() =>{
-          const result = true;
-          callback(result);
-        }, 1000);
-      },
-      message: "Price is correct"
-    } 
-  },
-  date: { type: Date, default: Date.now},
-  description: String,
-});
+// const tradeTypesEnum = [//array of categories
+//   'Others',
+//   'Clothing',
+//   'Shoes',
+//   'Bag',
+//   'Electronics',
+//   'Games',
+//   'Collectibles',
+//   'Rare items',
+//   'Sport gear',
+//   'Cash',
+// ];
+// //schema for Mongo DB
+// const tradesSchema = new mongoose.Schema({
+//   name: {type: String, required: true, minlength: 1, maxlength: 30},
+//   category: {type: String, required: true, enum: tradeTypesEnum},
+//   seller: String,
+//   //price: {type: Number, required: function(){return true; }},
+//   price: {
+//     type: Number,
+//     validate: {
+//       isAsync: true,
+//       validator: function(callback) {
+//         setTimeout(() =>{
+//           const result = true;
+//           callback(result);
+//         }, 1000);
+//       },
+//       message: "Price is correct"
+//     } 
+//   },
+//   date: { type: Date, default: Date.now},
+//   description: String,
+// });
 
 
 
