@@ -18,7 +18,11 @@ const Traders = mongoose.model('traders', traderSchema);//database w model
 
   
   router.get('/', async (req, res) => {
-    const traders = await Traders.find().sort('name');
+    const numberOfTraders = await Traders.count();
+    const traders = await Traders.find((err, temp) => {
+      console.log(temp[0].name);
+      console.log(numberOfTraders);
+    }).sort('name');
     res.send(traders);
   });
 

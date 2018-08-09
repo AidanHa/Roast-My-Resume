@@ -12,7 +12,7 @@ const express = require('express');
 //custom middleware + routes
 const logger = require('./middleware/logger');
 const auth = require('./middleware/Authenticate');
-const tradeTypesRouter = require('./routes/tradeTypes');
+const tradesRouter = require('./routes/trades');
 const tradersRouter = require('./routes/traders');
 const homeRouter = require('./routes/home');
 
@@ -33,7 +33,7 @@ if (app.get('env') === 'development') {//TO USE, set env='development'
   startupDebugger("Morgan Enabled...");//to use, set DEBUG=app:* or DEBUG=app:startup
 }
 
-app.use('/api/tradeTypes', tradeTypesRouter);
+app.use('/api/trades', tradesRouter);
 app.use('/api/traders', tradersRouter);
 app.use('/', homeRouter);
 
