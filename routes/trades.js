@@ -60,7 +60,7 @@ const Trades = mongoose.model('trade', tradeSchema);//database w model
     const { error } = validateTrade(req.body); 
     if (error) return res.status(400).send(error.details[0].message);
 
-    const trade = await Trades.findByIdAndUpdate(req.params.id, {name: req.body.name}, {new: true});
+    const trade = await Trades.findByIdAndUpdate(req.params.id, {name: req.body.name, type: req.body.type, trader: req.body.trader}, {new: true});
    
     if (!trade) {
       return res.status(404).send("The Trade Type with the given ID was not found.");
@@ -69,7 +69,7 @@ const Trades = mongoose.model('trade', tradeSchema);//database w model
   });
   
   router.delete('/:id', async (req, res) => {
-    const trade = await Trade.findByIdAndRemove(req.params.id, {name: req.body.name}, {new: true});
+    const trade = await Trade.findByIdAndRemove(req.params.id);
     if (!trade) return res.status(404).send('The Trade with the given ID was not found.');
   
     res.send(trade);
