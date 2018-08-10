@@ -6,7 +6,6 @@ const router = express.Router();
 const mongoose = require('mongoose');
 
 const tradeTypesEnum = [//array of categories
-  'Others',
   'Clothing',
   'Shoes',
   'Bag',
@@ -16,6 +15,7 @@ const tradeTypesEnum = [//array of categories
   'Rare items',
   'Sport gear',
   'Cash',
+  'Others',
 ];
 
 const tradeSchema = new mongoose.Schema({
@@ -29,8 +29,19 @@ const Trades = mongoose.model('trade', tradeSchema);//database w model
 
 
   router.get('/', async (req, res) => {
-    const trades = await Trades.find().sort('name');
-    res.send(trades);
+    const numberOfTrades = await Trades.count();
+    var tradesArray = new Array(numberOfTrades); 
+    const trades = await Trades.find((err, temp) => {
+      for(var i = 0; i < temp.length; i++){
+        tradesArray[i] = temp[i];
+        console.log(temp[i].name);
+        //console.log(numberOfTrades);
+      }
+      console.log(tradesArray);
+      res.render("home", {trades: tradesArray});
+    }).sort('name');
+    
+    //res.send(trades);
   });
 
   router.get('/:id', async (req, res) => {

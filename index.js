@@ -18,7 +18,7 @@ const homeRouter = require('./routes/home');
 
 //create app object + set/use middleware
 const app = express();
-app.set('view engine', 'pug');
+app.set('view engine', 'ejs');
 app.set('views', './views'); //all templates here
 
 app.use(express.json());//built in middlewear
