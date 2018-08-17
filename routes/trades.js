@@ -60,7 +60,7 @@ const Trades = mongoose.model('trade', tradeSchema);//database w model
   });
   
 
-  router.post('/', upload.fields(['name', 'type', 'trader']), async (req, res) => {
+  router.post('/', upload.single("image"), async (req, res) => {
     console.log(req.body);
     const { error } = validateTrade(req.body); 
     if (error) return res.status(400).send(error.details[0].message);
