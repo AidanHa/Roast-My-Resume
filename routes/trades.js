@@ -4,6 +4,9 @@ const Joi = require('joi');
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const request = require('superagent');
+let multer = require('multer');
+let upload = multer();
 
 const tradeTypesEnum = [//array of categories
   'Clothing',
@@ -12,8 +15,8 @@ const tradeTypesEnum = [//array of categories
   'Electronics',
   'Games',
   'Collectibles',
-  'Rare items',
-  'Sport gear',
+  'Rare Items',
+  'Sports Gear',
   'Cash',
   'Others',
 ];
@@ -38,32 +41,37 @@ const Trades = mongoose.model('trade', tradeSchema);//database w model
         //console.log(numberOfTrades);
       }
       console.log(tradesArray);
-      res.render("home", {trades: tradesArray});
+      res.render("home/home", {trades: tradesArray});
     }).sort('name');
     
     //res.send(trades);
   });
-
+  router.get('/new', async (req, res) => {
+    res.render("home/temp");
+  });
   router.get('/:id', async (req, res) => {
     const trade = await Trades.findById(req.params.id);//PARAMS NOT PARAM
     console.log(trade);
     if (!trade) {
       return res.status(404).send('The Trade Type with the given name was not found... Please Try again');
     }
-    res.send(trade);
+    //res.send(trade);
+    res.render("item-page/item", {trade: trade});
   });
+  
 
-  router.post('/', async (req, res) => {
+  router.post('/', upload.fields(['name', 'type', 'trader']), async (req, res) => {
+    console.log(req.body);
     const { error } = validateTrade(req.body); 
     if (error) return res.status(400).send(error.details[0].message);
-  
+    
     let trade = new Trades({
       name: req.body.name,
       type: req.body.type,
       trader: req.body.trader,
     });
     trade = await trade.save();
-    res.send(trade);
+    res.render("item-page/item", {trade: trade});
   });
   
   router.put('/:id', async (req, res) => {

@@ -8,7 +8,8 @@ const Joi = require('joi');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const express = require('express');
-
+const bodyParser = require("body-parser");
+const request = require('superagent');
 //custom middleware + routes
 const logger = require('./middleware/logger');
 const auth = require('./middleware/Authenticate');
@@ -21,8 +22,12 @@ const app = express();
 app.set('view engine', 'ejs');
 app.set('views', './views'); //all templates here
 
-app.use(express.json());//built in middlewear
-app.use(express.urlencoded({extended: true})); //key=value&key=value
+
+//app.use(express.json());//built in middlewear
+//app.use(express.urlencoded({extended: true})); //key=value&key=value
+app.use(bodyParser.urlencoded());
+app.use(bodyParser.json());
+
 app.use(express.static('public'));
 app.use(logger);//only called when there's a request bruh
 app.use(auth);
