@@ -6,7 +6,31 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const request = require('superagent');
 let multer = require('multer');
-let upload = multer();
+//let upload = multer();
+var cloudinary = require("cloudinary");
+
+var storage = multer.diskStorage({
+  filename: function(req, file, callback){
+      callback(null, Date.now() + file.originalname);
+  }
+});
+
+var image1 = function(req, file, callback){
+  if(!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)){
+      return callback(new Error("Only images allowed."), false);
+  }
+  callback(null, true);
+};
+
+var upload = multer({storage: storage, fileFilter: image1});
+
+
+cloudinary.config({
+    cloud_name: "trending-trades",
+    api_key: "232591527462751",
+    api_secret: "2Cxo217x3sbg8Vsj3IV-6nSbK5M"
+});
+
 
 const tradeTypesEnum = [//array of categories
   'Clothing',
@@ -25,6 +49,8 @@ const tradeSchema = new mongoose.Schema({
   name: {type: String, required: true, minlength: 3, maxlength: 30},
   type: {type: String, enum: tradeTypesEnum, required: true, minlength: 3, maxlength: 30},
   trader: {type: String, required: true, minlength: 3, maxlength: 30},
+  image: {type: String},
+  desc: {type: String},
   date: { type: Date, default: Date.now}
 });
 
@@ -63,15 +89,33 @@ const Trades = mongoose.model('trade', tradeSchema);//database w model
   router.post('/', upload.single("image"), async (req, res) => {
     console.log(req.body);
     const { error } = validateTrade(req.body); 
-    if (error) return res.status(400).send(error.details[0].message);
-    
-    let trade = new Trades({
-      name: req.body.name,
-      type: req.body.type,
-      trader: req.body.trader,
-    });
-    trade = await trade.save();
-    res.render("item-page/item", {trade: trade});
+    //if (error) return res.status(400).send(error.details[0].message + " bruh");
+    if (!req.file) {
+      console.log("No file received");
+      return res.send({
+        success: false
+      });
+    } else {
+      cloudinary.uploader.upload(req.file.path, async (result) => {
+        var temp = result.secure_url;
+        console.log(image1);
+        console.log('file received');  
+        const host = req.host;
+        const filePath = req.protocol + "://" + host + '/' + req.file.path;
+       console.log(filePath);
+        let trade = new Trades({
+         name: req.body.name,
+         type: req.body.type,
+         trader: req.body.trader,
+         desc: req.body.desc,
+         image: temp
+         
+       });
+      trade = await trade.save();
+      res.render("item-page/item", {trade: trade});
+      });   
+      
+    }
   });
   
   router.put('/:id', async (req, res) => {

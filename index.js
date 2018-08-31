@@ -16,6 +16,8 @@ const auth = require('./middleware/Authenticate');
 const tradesRouter = require('./routes/trades');
 const tradersRouter = require('./routes/traders');
 const homeRouter = require('./routes/home');
+let multer = require('multer');
+let upload = multer();
 
 //create app object + set/use middleware
 const app = express();
@@ -29,19 +31,20 @@ app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
 
 app.use(express.static('public'));
+
 app.use(logger);//only called when there's a request bruh
 app.use(auth);
 app.use(helmet());//INSTALL MIDDLEWARE FUNCTION app.used is done everytime we get a request. Middleware populate req.body
-
+app.use(morgan('dev'));
+/*
 if (app.get('env') === 'development') {//TO USE, set env='development'
   app.use(morgan('tiny'));
   startupDebugger("Morgan Enabled...");//to use, set DEBUG=app:* or DEBUG=app:startup
 }
-
+*/
 app.use('/api/trades', tradesRouter);
 app.use('/api/traders', tradersRouter);
 app.use('/', homeRouter);
-
 
 
 //Configuration with npm config
