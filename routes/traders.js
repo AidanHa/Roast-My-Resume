@@ -9,10 +9,10 @@ const mongoose = require('mongoose');
 const traderSchema = new mongoose.Schema({
   firstName: {type: String, required: true, minlength: 1, maxlength: 30},
   lastName: {type: String, required: true, minlength: 1, maxlength: 30},
-  phone: {type: String, required: true},
-  email: {type: String, minlength: 4, default: "none"},
+  phone: {type: String},
+  email: {type: String, minlength: 4, required: true, unique: true, default: "none"},
+  password: {type: String, minlength: 8, required: true, default: "none"},
   facebook: {type: String, minlength: 4, default: "none"},
-
 });
 
 const Traders = mongoose.model('traders', traderSchema);//database w model
@@ -23,8 +23,10 @@ const Traders = mongoose.model('traders', traderSchema);//database w model
     const traders = await Traders.find().sort('name');
     res.send(traders);
   });
-
-  router.get('/:name', async (req, res) => {
+  router.get('/new', async (req, res) => {
+    res.render("users/new");
+  });
+  router.get('/:id', async (req, res) => {
     const trader = await Traders.findById(req.params.id);//PARAMS NOT PARAM
     console.log(trader);
     if (!trader) {
@@ -42,6 +44,7 @@ const Traders = mongoose.model('traders', traderSchema);//database w model
       lastName: req.body.lastName,
       phone: req.body.phone,
       email: req.body.email,
+      password: req.body.password,
       facebook: req.body.facebook,
     });
     trader = await trader.save();
@@ -73,8 +76,9 @@ const Traders = mongoose.model('traders', traderSchema);//database w model
     const schema = {
       firstName: Joi.string().min(1).required(),
       lastName: Joi.string().min(1).required(),
-      phone: Joi.string().required().min(4),
-      email: Joi.string(),
+      phone: Joi.string().min(7),
+      email: Joi.string().required(),
+      password: Joi.string().required(),
       facebook: Joi.string()
     };
   
