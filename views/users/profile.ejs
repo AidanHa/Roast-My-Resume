@@ -48,25 +48,19 @@
     <div class="container">
 
       <!-- Portfolio Item Heading -->
-      <h1 class="my-4"><%= trade.name %>
-        <!--<small><%= trade.type %></small>-->
+      <h1 class="my-4"><%= trader.firstName %> <%= trader.lastName %>
       </h1>
 
       <!-- Portfolio Item Row -->
       <div class="row">
 
-        <div class="col-md-8">
-          <img class="img-fluid" src=<%= trade.image %> alt="Image might take time to load... Try refreshing the page in 10 seconds">
-        </div>
 
         <div class="col-md-4">
-          <h3 class="my-3">Project Description</h3>
-          <p><%= trade.desc %></p>
-          <h3 class="my-3">Project Details</h3>
+          <h3 class="my-3">Trader Info</h3>
           <ul>
-            <li>Name: <%= trade.name %></li>
-            <li>Type: <%= trade.type %></li>
-            <li>Trader: <%= trade.trader %></li>
+            <li>Name: <%= trader.email %></li>
+            <li>Type: <%= trader.phone %></li>
+            <li>Trader: <%= trader.facebook %></li>
           </ul>
         </div>
 

@@ -6095,6 +6095,8 @@ button.bg-light:focus {
 
 .bg-dark {
   background-color: #343a40 !important;
+  position: absolute;
+
 }
 
 a.bg-dark:hover, a.bg-dark:focus,
@@ -7663,6 +7665,7 @@ button.bg-dark:focus {
 .pb-5,
 .py-5 {
   padding-bottom: 3rem !important;
+  position: fixed; bottom: 0;
 }
 
 .pl-5,

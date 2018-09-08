@@ -53,15 +53,9 @@
             <div class="row">
                     <div class="centerText panel panel-default">
                         <div class="panel-body">
-                            <h1 style="text-align: center">Create an account</h1>
+                            <h1 style="text-align: center">Login</h1>
                             <hr>
-                            <form action="/api/traders" method="POST" enctype="multipart/form-data">
-                                <div class="form-group">
-                                    <input class="form-control" type="text" name="firstName" id="firstName" placeholder="First Name" required>
-                                </div>
-                                <div class="form-group">
-                                    <input class="form-control" type="text" name="lastName" id="lastName" placeholder="Last Name" required>
-                                </div>
+                            <form action="/api/traders/login" method="POST" enctype="multipart/form-data">
                                 <div class="form-group">
                                     <input cols="50"class="form-control" name="email" id="email" placeholder="Email" required></textarea>
                                 </div>
@@ -69,37 +63,9 @@
                                     <input class="form-control" type="password" name="password" id="password" placeholder="Password" required>
                                 </div>
                                 <div class="form-group">
-                                    <input cols="50"class="form-control" name="phone" id="phone" placeholder="Phone"></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <input cols="50"class="form-control" name="facebook" id="facebook" placeholder="Facebook" ></textarea>
-                                </div>
-                                <div class="form-group">
-                                        <button class="btn btn-lg btn-primary btn-block">Submit</button>
+                                        <button class="btn btn-lg btn-primary btn-block">Login</button>
                                 </div>
                             </form>
-                            <!--<div class="form-group">
-                                    <button class="btn btn-lg btn-primary btn-block">Submit</button>
-                            </div>
-                            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-                            <script>
-                                    $(document).ready(function(){
-                                        $("button").click(function(){
-                                            $.post("http://localhost:5000/api/trades/",
-                                            {
-                                                name: document.getElementById("name").value,
-                                                type: document.getElementById("type").value,
-                                                trader: document.getElementById("trader").value
-                                            },
-                                                function(data,status){
-                                                    alert("Data: " + data + "\nStatus: " + status);
-                                                    window.location.href = 'http://localhost:5000/api/trades/';
-                                            });
-
-                                        });
-                                    });
-                            </script>
-                        -->
                         </div>
                     </div>
                 </div>
