@@ -10,9 +10,7 @@ const morgan = require('morgan');
 const express = require('express');
 const bodyParser = require("body-parser");
 const request = require('superagent');
-var flash = require("connect-flash");
-const passport = require("passport");
-const localStrat = require("passport-local");
+const Trader = require("./models/trader");
 //custom middleware + routes
 const logger = require('./middleware/logger');
 const auth = require('./middleware/Authenticate');
@@ -21,7 +19,10 @@ const tradersRouter = require('./routes/traders');
 const homeRouter = require('./routes/home');
 let multer = require('multer');
 let upload = multer();
-
+const passport = require("passport");
+const localStrat = require("passport-local");
+const methodOverride = require("method-override");
+const flash = require("connect-flash");
 //create app object + set/use middleware
 const app = express();
 app.set('view engine', 'ejs');
@@ -48,6 +49,8 @@ if (app.get('env') === 'development') {//TO USE, set env='development'
 app.use('/api/trades', tradesRouter);
 app.use('/api/traders', tradersRouter);
 app.use('/', homeRouter);
+app.use(methodOverride("_method"));
+app.use(flash());
 
 app.locals.moment = require("moment");
 
@@ -56,18 +59,20 @@ app.use(require("express-session")({
     resave: false,
     saveUninitialized: false
 }));
+
 app.use(passport.initialize());
 app.use(passport.session());
-passport.use(new localStrat(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+passport.use(new localStrat(Trader.authenticate()));
+passport.serializeUser(Trader.serializeUser());
+passport.deserializeUser(Trader.deserializeUser());
 
 app.use(function(req, res, next){
-    res.locals.currentUser = req.user;
+    res.locals.currentUser = req.trader;
     res.locals.error = req.flash("error");
     res.locals.success = req.flash("success");
     next();
 });
+
 //Configuration with npm config
 //console.log('Application Name: ' + config.get('name'));
 //console.log('Mail Server ' + config.get('mail.host'));

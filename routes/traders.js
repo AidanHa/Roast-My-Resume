@@ -3,7 +3,9 @@ const config = require('config');
 const Joi = require('joi');
 const express = require('express');
 const router = express.Router();
+const passport = require("passport");
 const mongoose = require('mongoose');
+const Traders = require("../models/trader");
 let multer = require('multer');
 const _ = require('lodash');
 //let upload = multer();
@@ -23,18 +25,6 @@ var image1 = function(req, file, callback){
 
 var upload = multer({storage: storage});
 
-const traderSchema = new mongoose.Schema({
-  firstName: {type: String, required: true, minlength: 1, maxlength: 30},
-  lastName: {type: String, required: true, minlength: 1, maxlength: 30},
-  phone: {type: String},
-  email: {type: String, minlength: 4, required: true, default: "none"},
-  password: {type: String, minlength: 8, required: true, default: "none"},
-  facebook: {type: String, minlength: 4, default: "none"},
-});
-
-const Traders = mongoose.model('traders', traderSchema);//database w model
-
-  
   router.get('/', async (req, res) => {
     const numberOfTraders = await Traders.count();
     const traders = await Traders.find().sort('name');
@@ -55,7 +45,7 @@ const Traders = mongoose.model('traders', traderSchema);//database w model
     res.send(trader);
   });
 
-  router.post('/', upload.single("image"),  async (req, res) => {
+  router.post('/new', upload.single("image"),  async (req, res) => {
     const { error } = validateTrader(req.body); 
     if (error) return res.status(400).send(error.details[0].message);
   
@@ -78,7 +68,14 @@ const Traders = mongoose.model('traders', traderSchema);//database w model
     }
     res.render("users/profile", {trader: trader});
   });
-  
+
+  router.post("/login", passport.authenticate("local", 
+    {   
+        successRedirect: "../trades",
+        failureRedirect: "/login",
+        failureFlash: true
+    }), function(req, res) {
+  });
   router.put('/:id', async (req, res) => {
 
     const { error } = validateTrader(req.body); 
