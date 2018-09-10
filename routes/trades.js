@@ -1,5 +1,6 @@
 
 const config = require('config');
+const auth = require("../middleware/Authenticate");
 const Joi = require('joi');
 const express = require('express');
 const router = express.Router();
@@ -58,6 +59,10 @@ const Trades = mongoose.model('trade', tradeSchema);//database w model
 
 
   router.get('/', async (req, res) => {
+
+   // const token = req.header('x-auth-token');
+    //console.log(token);
+
     const numberOfTrades = await Trades.count();
     var tradesArray = new Array(numberOfTrades); 
     const trades = await Trades.find((err, temp) => {
@@ -72,8 +77,8 @@ const Trades = mongoose.model('trade', tradeSchema);//database w model
     
     //res.send(trades);
   });
-  router.get('/new', async (req, res) => {
-    res.render("home/temp");
+  router.get('/new', auth, async (req, res) => {
+      res.render("home/temp");
   });
   router.get('/:id', async (req, res) => {
     const trade = await Trades.findById(req.params.id);//PARAMS NOT PARAM
@@ -86,8 +91,9 @@ const Trades = mongoose.model('trade', tradeSchema);//database w model
   });
   
 
-  router.post('/', upload.single("image"), async (req, res) => {
+  router.post('/', auth, upload.single("image"), async (req, res) => {
     console.log(req.body);
+    
     const { error } = validateTrade(req.body); 
     //if (error) return res.status(400).send(error.details[0].message + " bruh");
     if (!req.file) {

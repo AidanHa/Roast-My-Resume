@@ -21,6 +21,10 @@ let upload = multer();
 
 //create app object + set/use middleware
 const app = express();
+if (!config.get('jwtPrivateKey')) {//set TrendingTrades_jwtPrivateKey=1234
+  console.error('FATAL ERROR, JWTPRIVATEKEY IS NOT DEFINED');
+  process.exit(1);
+}
 app.set('view engine', 'ejs');
 app.set('views', './views'); //all templates here
 
@@ -33,7 +37,14 @@ app.use(bodyParser.json());
 app.use(express.static('public'));
 
 app.use(logger);//only called when there's a request bruh
-app.use(auth);
+//app.use(auth);
+
+app.use((req, res, next) => {
+  res.append('Access-Control-Allow-Origin', ['*']);
+  res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.append('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
 app.use(helmet());//INSTALL MIDDLEWARE FUNCTION app.used is done everytime we get a request. Middleware populate req.body
 app.use(morgan('dev'));
 /*

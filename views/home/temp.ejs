@@ -36,10 +36,10 @@
               </a>
             </li>-->
             <li class="nav-item">
-              <a class="nav-link" href="">Login</a>
+              <a class="nav-link" href="/api/Traders/login">Login</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="">Sign Up</a>
+              <a class="nav-link" href="/api/Traders/new">Sign Up</a>
             </li>
           </ul>
         </div>
@@ -50,9 +50,13 @@
 <br>
     <!-- Page Content -->
     <div class="container">
+           
             <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4 col-md-offset-4">
+
                     <div class="centerText panel panel-default">
-                        <div class="panel-body">
+                        <div class="panel-body"></div>
                             <h1 style="text-align: center">Post a trade</h1>
                             <hr>
                             <form action="/api/trades" method="POST" enctype="multipart/form-data">
@@ -89,32 +93,11 @@
                                         <button class="btn btn-lg btn-primary btn-block">Submit</button>
                                 </div>
                             </form>
-                            <!--<div class="form-group">
-                                    <button class="btn btn-lg btn-primary btn-block">Submit</button>
-                            </div>
-                            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-                            <script>
-                                    $(document).ready(function(){
-                                        $("button").click(function(){
-                                            $.post("http://localhost:5000/api/trades/",
-                                            {
-                                                name: document.getElementById("name").value,
-                                                type: document.getElementById("type").value,
-                                                trader: document.getElementById("trader").value
-                                            },
-                                                function(data,status){
-                                                    alert("Data: " + data + "\nStatus: " + status);
-                                                    window.location.href = 'http://localhost:5000/api/trades/';
-                                            });
-
-                                        });
-                                    });
-                            </script>
-                        -->
+                          
                         </div>
-                    </div>
-                </div>
-                
+                    </div>           
+              </div>
+            </div>
 
     </div>
     <!-- /.container -->

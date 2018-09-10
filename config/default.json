@@ -1,6 +1,3 @@
 {
-    "name": "TrendingTrades",
-    "mail": {
-        "host": "-mail-server"
-    }
+    "jwtPrivateKey": ""
 }

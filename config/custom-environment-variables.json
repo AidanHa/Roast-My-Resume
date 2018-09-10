@@ -1,5 +1,3 @@
 {
-    "mail": {
-        "password": "password"
-    }
+    "jwtPrivateKey": "TrendingTrades_jwtPrivateKey"
 }
