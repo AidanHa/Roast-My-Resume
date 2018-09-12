@@ -87,8 +87,14 @@ router.get('/mytrades/:name', async (req, res) => {
     res.render("users/profile", {trades: tradesArray});
   }).sort('name');
 });
-
-router.get('/:id', async (req, res) => {
+router.get('/delete/:id', async (req, res) => {
+   const trade = await Trades.findByIdAndRemove(req.params.id);
+   if (!trade) return res.status(404).send('The Trade with the given ID was not found.');
+   res.redirect("../");
+   
+ });
+ 
+router.get('/:id', auth, async (req, res) => {
   const trade = await Trades.findById(req.params.id);//PARAMS NOT PARAM
   console.log(trade);
   if (!trade) {
@@ -123,6 +129,7 @@ router.post('/', upload.single("image"), async (req, res) => {
   }
 });
   
+
 router.put('/:id', async (req, res) => {
   const { error } = validateTrade(req.body); 
   if (error) return res.status(400).send(error.details[0].message);
@@ -137,7 +144,7 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   const trade = await Trade.findByIdAndRemove(req.params.id);
   if (!trade) return res.status(404).send('The Trade with the given ID was not found.');
-  res.send(trade);
+  res.redirect("api/trades");
 });
     
 function validateTrade(trade) {

@@ -37,7 +37,7 @@
             </li>-->
             <% if (user) { %>
               <li class="nav-item">
-                <a class="nav-link" href="/api/users/login"><%= user.username %></a>
+                <a class="nav-link" href="/api/trades/mytrades/<%= user.username %>">My Trades  </a>
               </li>
               <li class="nav-item">
                   <a class="nav-link" href="/api/users/logout">Logout</a>

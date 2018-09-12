@@ -35,7 +35,7 @@
 
             <% if (user) { %>
                 <li class="nav-item">
-                  <a class="nav-link" href="/api/trades/mytrades/<%= user.username %>"><%= user.username %></a>
+                  <a class="nav-link" href="/api/trades/mytrades/<%= user.username %>">My Trades  </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/api/users/logout">Logout</a>
@@ -91,8 +91,8 @@
                             <h2 class="card-title">
                                 <a href="http://localhost:5000/api/trades/<%= trade._id %>"style="color:black; font-weight: 420;"><%= trade.name %></a>  
                             </h2>  
-                            <p class="card-text"><%= trade.type %></p>
-                            <p class="card-text"><%= trade.trader %></p>
+                            <p class="card-text">Category: <%= trade.type %></p>
+                            <p class="card-text">Trader: <%= trade.trader %></p>
                           </div>
                           <div class="card-footer">
                             <a href="http://localhost:5000/api/trades/<%= trade._id %>" class="btn btn-primary">More Info</a>
@@ -110,7 +110,7 @@
     <!-- /.container -->
 
     <!-- Footer -->
-    <footer class="py-3 bg-dark fixed-bottom ">
+    <footer class="py-2 bg-dark fixed-bottom ">
       <div class="container">
           <div class="text-center col-md-12 col-md-offset-4">
             <a href="https://github.com/AidanHa/Trending-Trades" target="_blank">

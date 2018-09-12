@@ -30,17 +30,21 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
-            <!--<li class="nav-item active">
-              <a class="nav-link" href="">Home
-                <span class="sr-only">(current)</span>
-              </a>
-            </li>-->
-            <li class="nav-item">
-              <a class="nav-link" href="/api/Traders/login">Login</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/api/Traders/new">Sign Up</a>
-            </li>
+            <% if (user) { %>
+              <li class="nav-item">
+                <a class="nav-link" href="/api/trades/mytrades/<%= user.username %>">My Trades  </a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="/api/users/logout">Logout</a>
+                </li>
+            <% } else { %>
+              <li class="nav-item">
+                <a class="nav-link" href="/api/users/login">Login</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/api/users/new">Sign Up</a>
+              </li>
+            <% }%>
           </ul>
         </div>
       </div>
