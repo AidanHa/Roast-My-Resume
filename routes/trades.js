@@ -5,9 +5,7 @@ const Joi = require('joi');
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const request = require('superagent');
 let multer = require('multer');
-//let upload = multer();
 var cloudinary = require("cloudinary");
 
 var storage = multer.diskStorage({
@@ -29,7 +27,7 @@ var upload = multer({storage: storage, fileFilter: image1});
 cloudinary.config({
     cloud_name: "trending-trades",
     api_key: "232591527462751",
-    api_secret: "2Cxo217x3sbg8Vsj3IV-6nSbK5M"
+    api_secret: "2Cxo217x3sbg8Vsj3IV-6nSbK5M"//maybe add this to an environment variable or use config package
 });
 
 
@@ -57,101 +55,98 @@ const tradeSchema = new mongoose.Schema({
 
 const Trades = mongoose.model('trade', tradeSchema);//database w model
 
-
-  router.get('/', async (req, res) => {
-
-   // const token = req.header('x-auth-token');
-    //console.log(token);
-
-    const numberOfTrades = await Trades.count();
-    var tradesArray = new Array(numberOfTrades); 
-    const trades = await Trades.find((err, temp) => {
-      for(var i = 0; i < temp.length; i++){
-        tradesArray[i] = temp[i];
-        console.log(temp[i].name);
-        //console.log(numberOfTrades);
-      }
-      console.log(tradesArray);
-      res.render("home/home", {trades: tradesArray});
-    }).sort('name');
-    
-    //res.send(trades);
-  });
-  router.get('/new', auth, async (req, res) => {
-      res.render("home/temp");
-  });
-  router.get('/:id', async (req, res) => {
-    const trade = await Trades.findById(req.params.id);//PARAMS NOT PARAM
-    console.log(trade);
-    if (!trade) {
-      return res.status(404).send('The Trade Type with the given name was not found... Please Try again');
+//for Home Page
+router.get('/', async (req, res) => {
+  const numberOfTrades = await Trades.count();
+  var tradesArray = new Array(numberOfTrades); 
+  const trades = await Trades.find((err, temp) => {
+    for(var i = 0; i < temp.length; i++){
+      tradesArray[i] = temp[i];
     }
-    //res.send(trade);
-    res.render("item-page/item", {trade: trade});
-  });
-  
+    res.render("home/home", {trades: tradesArray});
+  }).sort('name');
+});
 
-  router.post('/', auth, upload.single("image"), async (req, res) => {
-    console.log(req.body);
-    
-    const { error } = validateTrade(req.body); 
-    //if (error) return res.status(400).send(error.details[0].message + " bruh");
-    if (!req.file) {
-      console.log("No file received");
-      return res.send({
-        success: false
-      });
-    } else {
-      cloudinary.uploader.upload(req.file.path, async (result) => {
-        var temp = result.secure_url;
-        console.log(image1);
-        console.log('file received');  
-        const host = req.host;
-        const filePath = req.protocol + "://" + host + '/' + req.file.path;
-       console.log(filePath);
-        let trade = new Trades({
-         name: req.body.name,
+//New Trade
+router.get('/new', auth, async (req, res) => {
+  res.render("home/temp");
+});
+
+//for user's trades
+router.get('/mytrades/:name', async (req, res) => {
+  const numberOfTrades = await Trades.count();
+  var tradesArray = new Array(numberOfTrades); 
+  var x = 0;
+  const trades = await Trades.find((err, temp) => {
+    for(var i = 0; i < temp.length; i++){
+      if (temp[i].trader == req.params.name) {
+        tradesArray[x] = temp[i];
+        x++;
+      }
+    }
+    res.render("users/profile", {trades: tradesArray});
+  }).sort('name');
+});
+
+router.get('/:id', async (req, res) => {
+  const trade = await Trades.findById(req.params.id);//PARAMS NOT PARAM
+  console.log(trade);
+  if (!trade) {
+    return res.status(404).send('The Trade Type with the given name was not found... Please Try again');
+  }
+  res.render("item-page/item", {trade: trade});
+});
+  
+router.post('/', upload.single("image"), async (req, res) => {
+  if (!req.file) {
+    console.log("No file received");
+    return res.send({
+      success: false
+    });
+  } else {
+    cloudinary.uploader.upload(req.file.path, async (result) => {
+      var temp = result.secure_url;
+      const host = req.host;
+      const filePath = req.protocol + "://" + host + '/' + req.file.path;
+      console.log(filePath);
+      let trade = new Trades({
+        name: req.body.name,
          type: req.body.type,
-         trader: req.body.trader,
+         trader: req.user.username,
          desc: req.body.desc,
-         image: temp
-         
-       });
+         image: temp        
+      });
       trade = await trade.save();
       res.render("item-page/item", {trade: trade});
-      });   
+    });   
       
-    }
-  });
-  
-  router.put('/:id', async (req, res) => {
-
-    const { error } = validateTrade(req.body); 
-    if (error) return res.status(400).send(error.details[0].message);
-
-    const trade = await Trades.findByIdAndUpdate(req.params.id, {name: req.body.name, type: req.body.type, trader: req.body.trader}, {new: true});
-   
-    if (!trade) {
-      return res.status(404).send("The Trade Type with the given ID was not found.");
-    }
-    res.send(trade);
-  });
-  
-  router.delete('/:id', async (req, res) => {
-    const trade = await Trade.findByIdAndRemove(req.params.id);
-    if (!trade) return res.status(404).send('The Trade with the given ID was not found.');
-  
-    res.send(trade);
-  });
-    
-  function validateTrade(trade) {
-    const schema = {
-      name: Joi.string().min(3).required(),
-      type: Joi.string().min(3).required(),
-      trader: Joi.string().min(3).required()
-    };
-  
-    return Joi.validate(trade, schema);
   }
+});
+  
+router.put('/:id', async (req, res) => {
+  const { error } = validateTrade(req.body); 
+  if (error) return res.status(400).send(error.details[0].message);
+  const trade = await Trades.findByIdAndUpdate(req.params.id, {name: req.body.name, type: req.body.type, trader: req.body.trader}, {new: true});
+   
+  if (!trade) {
+    return res.status(404).send("The Trade Type with the given ID was not found.");
+  }
+  res.send(trade);
+});
+  
+router.delete('/:id', async (req, res) => {
+  const trade = await Trade.findByIdAndRemove(req.params.id);
+  if (!trade) return res.status(404).send('The Trade with the given ID was not found.');
+  res.send(trade);
+});
+    
+function validateTrade(trade) {
+  const schema = {
+    name: Joi.string().min(3).required(),
+    type: Joi.string().min(3).required(),
+    trader: Joi.string().min(3).required()
+  };
+  return Joi.validate(trade, schema);
+}
 
-  module.exports = router;
+module.exports = router;

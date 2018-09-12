@@ -35,12 +35,21 @@
                 <span class="sr-only">(current)</span>
               </a>
             </li>-->
-            <li class="nav-item">
-              <a class="nav-link" href="/api/Traders/login">Login</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/api/Traders/new">Sign Up</a>
-            </li>
+            <% if (user) { %>
+              <li class="nav-item">
+                <a class="nav-link" href="/api/users/login"><%= user.username %></a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="/api/users/logout">Logout</a>
+                </li>
+             <% } else { %>
+              <li class="nav-item">
+                <a class="nav-link" href="/api/users/login">Login</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/api/users/new">Sign Up</a>
+              </li>
+            <% }%>
           </ul>
         </div>
       </div>
@@ -61,7 +70,7 @@
                             <hr>
                             <form action="/api/trades" method="POST" enctype="multipart/form-data">
                                 <div class="form-group">
-                                    <input class="form-control" type="text" name="name" id="name" placeholder="Name" required>
+                                    <input class="form-control" type="text" name="name" id="name" placeholder="Trade Object" required>
                                 </div>
                                 <div class="form-group">
                                         <select type="text" name="type" class="form-control">
@@ -76,9 +85,6 @@
                                                 <option value="Cash">Cash</option>
                                                 <option value="Others">Others</option>
                                               </select>
-                                </div>
-                                <div class="form-group">
-                                    <input class="form-control" type="text" name="trader" id="trader" placeholder="Trader Name" required>
                                 </div>
                                 <div class="form-group">
                                     <textarea rows="5" cols="50"class="form-control" name="desc" id="desc" placeholder="description" required></textarea>

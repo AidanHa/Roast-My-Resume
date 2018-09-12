@@ -13,7 +13,8 @@
     <link rel="icon" href="/images/logo.jpg">
     <!-- Bootstrap core CSS -->
     <link href="/bootstrap/home/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <script src="https://use.fontawesome.com/58b9791761.js"></script>
     <!-- Custom styles for this template -->
     <link href="/bootstrap/home/css/small-business.css" rel="stylesheet">
     
@@ -31,17 +32,22 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
-            <!--<li class="nav-item active">
-              <a class="nav-link" href="#">Home
-                <span class="sr-only">(current)</span>
-              </a>
-            </li>-->
-            <li class="nav-item">
-              <a class="nav-link" href="/api/Traders/login">Login</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/api/Traders/new">Sign Up</a>
-            </li>
+
+            <% if (user) { %>
+                <li class="nav-item">
+                  <a class="nav-link" href="/api/trades/mytrades/<%= user.username %>"><%= user.username %></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/api/users/logout">Logout</a>
+                  </li>
+            <% } else { %>
+                <li class="nav-item">
+                  <a class="nav-link" href="/api/users/login">Login</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/api/users/new">Sign Up</a>
+                </li>
+              <% }%>
           </ul>
         </div>
       </div>
@@ -61,7 +67,8 @@
         <div class="col-lg-4">
           <h1>Trending Trades</h1>
           
-          <p>Your very own trading platform. Trade your own items for something cool or amazing that someone else might have. Post trades of your own to let others trade with you. Build your own trading network with our friendly community. Find value everywhere with our free trading services!</p>
+          <p>Welcome to Trending Trades, your very own trading platform! Trade your own items for something cool or amazing that someone else might have! 
+            Build your own trading network with our friendly community! Find value everywhere with our free trading services!</p>
           <a class="btn btn-primary btn-lg" href="/api/trades/new">Make a Trade!</a>
         </div>
         <!-- /.col-md-4 -->
@@ -103,9 +110,13 @@
     <!-- /.container -->
 
     <!-- Footer -->
-    <footer class="py-4 bg-dark fixed-bottom">
+    <footer class="py-3 bg-dark fixed-bottom ">
       <div class="container">
-        <p class="m-0 text-center text-white">Copyright &copy; Your Website 2018</p>
+          <div class="text-center col-md-12 col-md-offset-4">
+            <a href="https://github.com/AidanHa/Trending-Trades" target="_blank">
+              <i class="fa fa-github" aria-hidden="true" style="color: white; font-size: 40px;"></i>
+            </a>
+      </div>
       </div>
       <!-- /.container -->
     </footer>
