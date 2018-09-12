@@ -8,9 +8,9 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Trending Trades</title>
+    <title>Roast My Resume</title>
 
-    <link rel="icon" href="/images/logo.jpg">
+    <link rel="icon" href="/images/RMR.jpg">
 
     <!-- Bootstrap core CSS -->
     <link href="/bootstrap/single-trade/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -26,7 +26,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div class="container">
-        <a class="navbar-brand" href="http://localhost:5000/api/trades">Trending Trades</a>
+        <a class="navbar-brand" href="http://localhost:5000/api/Resumes">Roast My Resume</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -34,7 +34,7 @@
           <ul class="navbar-nav ml-auto">
               <% if (user) { %>
                 <li class="nav-item">
-                  <a class="nav-link" href="/api/trades/mytrades/<%= user.username %>">My Trades  </a>
+                  <a class="nav-link" href="/api/Resumes/MyResumes/<%= user.username %>">My Resumes </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/api/users/logout">Logout</a>
@@ -56,28 +56,27 @@
     <div class="container">
 
       <!-- Portfolio Item Heading -->
-      <h1 class="my-4"><%= trade.name %>
-        <!--<small><%= trade.type %></small>-->
+      <h1 class="my-4"><%= resume.name %>
       </h1>
 
       <!-- Portfolio Item Row -->
       <div class="row">
 
-        <div class="col-md-8">
-          <img class="img-fluid" src=<%= trade.image %> alt="Image might take time to load... Try refreshing the page in 10 seconds">
+        <div class="col-lg-8">
+            <embed class="" src="<%= resume.resumePDF %>" width="700" height="800" type='application/pdf'>
         </div>
 
         <div class="col-md-4">
-          <h3 class="my-3">Project Description</h3>
-          <p><%= trade.desc %></p>
-          <h3 class="my-3">Project Details</h3>
+            <h3 class="my-3">Resume Details</h3>
           
-          <li>Name: <%= trade.name %></li>
-          <li>Type: <%= trade.type %></li>
-          <li>Trader: <%= trade.trader %></li>
+            <li>Name: <%= resume.name %></li>
+            <li>Type: <%= resume.type %></li>
+            <li>Written By: <%= resume.owner %></li>
+          <h3 class="my-3">Resume Description</h3>
+          <p><%= resume.desc %></p>
           <br>
-          <% if (user.username == trade.trader || user.username == "aidanha99") { %>
-            <a class="btn btn-primary btn-lg" href="/api/trades/delete/<%= trade._id %>">Delete</a>
+          <% if (user.username == resume.owner || user.username == "aidanha99") { %>
+            <a class="btn btn-primary btn-lg" href="/api/Resumes/delete/<%= resume._id %>">Delete</a>
           <% }%>
         </div>
       </div>

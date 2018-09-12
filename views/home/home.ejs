@@ -8,9 +8,9 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Trending Trades</title>
+    <title>Roast My Resume</title>
     
-    <link rel="icon" href="/images/logo.jpg">
+    <link rel="icon" href="/images/RMR.jpg">
     <!-- Bootstrap core CSS -->
     <link href="/bootstrap/home/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
@@ -25,7 +25,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div class="container">
-        <a class="navbar-brand" href="">Trending Trades</a>
+        <a class="navbar-brand" href="">Roast My Resume</a>
         
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -34,8 +34,9 @@
           <ul class="navbar-nav ml-auto">
 
             <% if (user) { %>
+
                 <li class="nav-item">
-                  <a class="nav-link" href="/api/trades/mytrades/<%= user.username %>">My Trades  </a>
+                    <a class="nav-link" href="/api/Resumes/MyResumes/<%= user.username %>">My Resumes </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/api/users/logout">Logout</a>
@@ -65,12 +66,13 @@
         </div>
         <!-- /.col-lg-8 -->
         <div class="col-lg-4">
-          <h1>Trending Trades</h1>
+          <h2>It's Roasting Season</h2>
           
-          <p>Welcome to Trending Trades, your very own trading platform! Trade your own items for something cool or amazing with someone else! 
-            Build your own trading network with our friendly community! Find value everywhere with our free trading services!</p>
-          <a class="btn btn-primary btn-lg" href="/api/trades/new">Make a Trade!</a>
+          <p>Need a co-op position for the next term? Tying to find a better job? Finna Cali or bust? Welcome to Roast My Resume, where you can improve your 
+            resume by sharing it and getting it roasted! You can also view other resumes here and roast them to return the favour. Start now and get roasted today! </p>
+            <a class="btn btn-primary btn-lg " href="/api/Resumes/new">Add a Resume</a>
         </div>
+        
         <!-- /.col-md-4 -->
       </div>
       <!-- /.row -->
@@ -78,29 +80,29 @@
       <!-- Call to Action Well -->
       <div class="card text-white bg-secondary my-4 text-center">
         <div class="card-body">
-          <p class="text-white m-0" >Featured Trades:</p>
+          <p class="text-white m-0" >New Resumes:</p>
         </div>
       </div>
       
       <!-- Content Row -->
       <div class="row">
-            <% trades.forEach(function(trade){ %>
+            <% resumes.forEach(function(resume){ %>
                 <div class="col-md-4 mb-4">
                         <div class="card h-100">
                           <div class="card-body">
                             <h2 class="card-title">
-                                <a href="http://localhost:5000/api/trades/<%= trade._id %>"style="color:black; font-weight: 420;"><%= trade.name %></a>  
+                                <a href="http://localhost:5000/api/Resumes/<%= resume._id %>"style="color:black; font-weight: 420;"><%= resume.name %></a>  
                             </h2>  
-                            <p class="card-text">Category: <%= trade.type %></p>
-                            <p class="card-text">Trader: <%= trade.trader %></p>
+                            <p class="card-text">Category: <%= resume.type %></p>
+                            <p class="card-text">Author: <%= resume.owner %></p>
                           </div>
                           <div class="card-footer">
-                            <a href="http://localhost:5000/api/trades/<%= trade._id %>" class="btn btn-primary">More Info</a>
+                            <a href="http://localhost:5000/api/Resumes/<%= resume._id %>" class="btn btn-primary">More Info</a>
                           </div>
                         </div>
                       </div>
                       <!-- /.col-md-4 -->
-                <!--<a><%= trade.date %></a>-->  
+
                 <br></br>
             <% }); %>   
       </div>

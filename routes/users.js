@@ -91,7 +91,7 @@ passport.deserializeUser(function (id, done) {
 });
 
 router.post('/login',
-	passport.authenticate('local', { successRedirect: '/api/trades', failureRedirect: '/api/users/login', failureFlash: true }),
+	passport.authenticate('local', { successRedirect: '/api/resumes', failureRedirect: '/api/users/login', failureFlash: true }),
 	function (req, res) {
 	});
 

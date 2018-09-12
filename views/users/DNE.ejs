@@ -8,15 +8,17 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Trending Trades</title>
-    
-    <link rel="icon" href="/images/logo.jpg">
-    <!-- Bootstrap core CSS -->
-    <link href="/bootstrap/home/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <title>Roast My Resume</title>
 
+    <link rel="icon" href="/images/RMR.jpg">
+
+    <!-- Bootstrap core CSS -->
+    <link href="/bootstrap/single-trade/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <script src="https://use.fontawesome.com/58b9791761.js"></script>
     <!-- Custom styles for this template -->
     <link href="/bootstrap/home/css/small-business.css" rel="stylesheet">
-    
+
   </head>
 
   <body>
@@ -24,31 +26,32 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div class="container">
-        <a class="navbar-brand" href="/api/Trades">Trending Trades</a>
+        <a class="navbar-brand" href="http://localhost:5000/api/Resumes">Roast My Resume</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
-            <% if (user) { %>
-              <li class="nav-item">
-                <a class="nav-link" href="/api/trades/mytrades/<%= user.username %>">My Trades  </a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="/api/users/logout">Logout</a>
+              <% if (user) { %>
+                <li class="nav-item">
+                  <a class="nav-link" href="/api/Resumes/MyResumes/<%= user.username %>">My Resumes </a>
                 </li>
-            <% } else { %>
-              <li class="nav-item">
-                <a class="nav-link" href="/api/users/login">Login</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/api/users/new">Sign Up</a>
-              </li>
-            <% }%>
+                <li class="nav-item">
+                    <a class="nav-link" href="/api/users/logout">Logout</a>
+                  </li>
+               <% } else { %>
+                <li class="nav-item">
+                  <a class="nav-link" href="/api/users/login">Login</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/api/users/new">Sign Up</a>
+                </li>
+              <% }%>
           </ul>
         </div>
       </div>
     </nav>
+
 
 
 <br>

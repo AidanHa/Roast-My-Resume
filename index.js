@@ -20,7 +20,7 @@ let upload = multer();
 
 //custom middleware + routes
 const auth = require('./middleware/Authenticate');
-const tradesRouter = require('./routes/trades');
+const resumesRouter = require('./routes/resumes');
 const usersRouter = require('./routes/users');
 const homeRouter = require('./routes/home');
 
@@ -79,12 +79,12 @@ app.use(function (req, res, next) {
 });
 
 //set routes
-app.use('/api/trades', tradesRouter);
+app.use('/api/Resumes', resumesRouter);
 app.use('/api/users', usersRouter);
 app.use('/', homeRouter);
 
 //connect to server
-mongoose.connect('mongodb://localhost/TrendingTrades').then(() => console.log('Connected to database')).catch((err) => console.error('Could not connect to mongodb', err));
+mongoose.connect('mongodb://localhost/RoastMyResume').then(() => console.log('Connected to database')).catch((err) => console.error('Could not connect to mongodb', err));
 
 //listen on express server
 const port = process.env.PORT || 3000;
