@@ -52,7 +52,9 @@ const resumeSchema = new mongoose.Schema({
   owner: {type: String, required: true},
   resumePDF: {type: String},
   desc: {type: String},
-  date: { type: Date, default: Date.now}
+  date: { type: Date, default: Date.now},
+  commentAuthorArray: [String],
+  commentContentArray: [String]
 });
 
 const Resumes = mongoose.model('resumes', resumeSchema);//database w model
@@ -126,12 +128,26 @@ router.post('/', upload.single("image"), async (req, res) => {
          desc: req.body.desc,
          resumePDF: temp
       });
+      console.log(resume);
       resume = await resume.save();
       res.render("item-page/item", {resume: resume});
     }, {public_id: 'single_page_pdf'});
   }
 });
-  
+
+//new comment
+router.post('/NewComment/:id', async (req, res) => {
+  const resumeTemp = await Resumes.findById(req.params.id);//PARAMS NOT PARAM
+  console.log(resumeTemp.commentAuthorArray);
+  resumeTemp.commentAuthorArray.push(req.user.username);
+  resumeTemp.commentAuthorArray.push(req.body.comment);
+  const commentAuthorArrayTemp = resumeTemp.commentAuthorArray
+  const commentContentArrayTemp = resumeTemp.commentContentArray
+  console.log(commentAuthorArrayTemp);
+  console.log(req.body.comment);
+  const resume = await Resumes.findByIdAndUpdate(req.params.id, {commentAuthorArray: commentAuthorArrayTemp, commentContentArray: commentContentArrayTemp}, {new: true});
+  res.render("item-page/item", {resume: resume});
+});
 
 router.put('/:id', async (req, res) => {
   const { error } = validateResume(req.body); 
