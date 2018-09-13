@@ -77,7 +77,7 @@ router.get('/new', auth, async (req, res) => {
 });
 
 //for user's trades
-router.get('/MyResumes/:name', async (req, res) => {
+router.get('/MyResumes/:name', auth, async (req, res) => {
   const numberOfResumes = await Resumes.count();
   var resumesArray = new Array(numberOfResumes); 
   var x = 0;
@@ -91,7 +91,7 @@ router.get('/MyResumes/:name', async (req, res) => {
     res.render("users/profile", {resumes: resumesArray});
   }).sort('name');
 });
-router.get('/delete/:id', async (req, res) => {
+router.get('/delete/:id', auth, async (req, res) => {
    const resume = await Resumes.findByIdAndRemove(req.params.id);
    if (!resume) return res.status(404).send('The Resume with the given ID was not found.');
    res.redirect("../");
@@ -107,7 +107,7 @@ router.get('/:id', auth, async (req, res) => {
   res.render("item-page/item", {resume: resume});
 });
   
-router.post('/', upload.single("image"), async (req, res) => {
+router.post('/', upload.single("image"), auth, async (req, res) => {
   if (!req.file) {
     console.log("No file received");
     return res.send({
@@ -136,11 +136,11 @@ router.post('/', upload.single("image"), async (req, res) => {
 });
 
 //new comment
-router.post('/NewComment/:id', async (req, res) => {
+router.post('/NewComment/:id',auth, async (req, res) => {
   const resumeTemp = await Resumes.findById(req.params.id);//PARAMS NOT PARAM
   console.log(resumeTemp.commentAuthorArray);
   resumeTemp.commentAuthorArray.push(req.user.username);
-  resumeTemp.commentAuthorArray.push(req.body.comment);
+  resumeTemp.commentContentArray.push(req.body.comment);
   const commentAuthorArrayTemp = resumeTemp.commentAuthorArray
   const commentContentArrayTemp = resumeTemp.commentContentArray
   console.log(commentAuthorArrayTemp);

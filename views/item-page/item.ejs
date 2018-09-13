@@ -74,21 +74,22 @@
             <li>Written By: <%= resume.owner %></li>
           <h3 class="my-3">Resume Description</h3>
           <p><%= resume.desc %></p>
-          <br>
+         
           <% if (user.username == resume.owner || user.username == "aidanha99") { %>
             <a class="btn btn-primary btn-lg" href="/api/Resumes/delete/<%= resume._id %>">Delete</a>
             <br>
           <% }%>
-          
+
+          <h3 class="my-3">Roasts</h3>
           <div class="form-group">
-            <% for (var i = 1; i <= resume.commentAuthorArray.length; i++) { %>
-                <p><%= resume.commentAuthorArray[i] %></p>  
+            <% for (var i = 0; i <= resume.commentAuthorArray.length-1; i++) { %>
+                <p><%= resume.commentAuthorArray[i] %> says: <%= resume.commentContentArray[i] %> </p>  
           <% } %>
         </div>
         <br></br>
         <form action="/api/Resumes//NewComment/<%= resume._id %>" method="POST">   
           <div class="form-group">
-              <textarea rows="2" cols="40"class="form-control" name="comment" id="comment" placeholder="comment" required></textarea>
+              <textarea rows="2" cols="40"class="form-control" name="comment" id="comment" placeholder="Roast This Resume" required></textarea>
           </div>
           <div class="form-group">
               <button class="btn btn-lg btn-primary btn-block">Comment</button>
