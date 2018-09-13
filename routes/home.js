@@ -10,7 +10,7 @@ const router = express.Router();
 
 
 router.get('/', (req, res) => {
-    res.redirect('/api/trades');
+    res.redirect('/api/Resumes');
   });
 
   module.exports = router;

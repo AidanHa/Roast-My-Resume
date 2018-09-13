@@ -25,9 +25,9 @@ var upload = multer({storage: storage, fileFilter: pdfFile});
 
 
 cloudinary.config({
-    cloud_name: "trending-trades",
-    api_key: "232591527462751",
-    api_secret: "2Cxo217x3sbg8Vsj3IV-6nSbK5M"//maybe add this to an environment variable or use config package
+    cloud_name: process.env.cloud_name,
+    api_key: process.env.api_key,
+    api_secret: process.env.api_secret
 });
 
 
@@ -104,7 +104,7 @@ router.get('/:id', auth, async (req, res) => {
   if (!resume) {
     return res.status(404).send('The Resume with the given id was not found... Please Try again');
   }
-  res.render("item-page/item", {resume: resume});
+  res.render("item-page/item", {resume: resume, TopAdmin: process.env.TopAdmin});
 });
   
 router.post('/', upload.single("image"), auth, async (req, res) => {
@@ -130,7 +130,8 @@ router.post('/', upload.single("image"), auth, async (req, res) => {
       });
       console.log(resume);
       resume = await resume.save();
-      res.render("item-page/item", {resume: resume});
+      console.log(process.env.TopAdmin);
+      res.render("item-page/item", {resume: resume, TopAdmin: process.env.TopAdmin});
     }, {public_id: 'single_page_pdf'});
   }
 });
@@ -138,6 +139,7 @@ router.post('/', upload.single("image"), auth, async (req, res) => {
 //new comment
 router.post('/NewComment/:id',auth, async (req, res) => {
   const resumeTemp = await Resumes.findById(req.params.id);//PARAMS NOT PARAM
+  if (!resumeTemp) return res.status(404).send('The Resume with the given ID was not found.');
   console.log(resumeTemp.commentAuthorArray);
   resumeTemp.commentAuthorArray.push(req.user.username);
   resumeTemp.commentContentArray.push(req.body.comment);
@@ -146,7 +148,7 @@ router.post('/NewComment/:id',auth, async (req, res) => {
   console.log(commentAuthorArrayTemp);
   console.log(req.body.comment);
   const resume = await Resumes.findByIdAndUpdate(req.params.id, {commentAuthorArray: commentAuthorArrayTemp, commentContentArray: commentContentArrayTemp}, {new: true});
-  res.render("item-page/item", {resume: resume});
+  res.render("item-page/item", {resume: resume, TopAdmin: process.env.TopAdmin});
 });
 
 router.put('/:id', async (req, res) => {

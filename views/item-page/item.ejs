@@ -75,7 +75,7 @@
           <h3 class="my-3">Resume Description</h3>
           <p><%= resume.desc %></p>
          
-          <% if (user.username == resume.owner || user.username == "aidanha99") { %>
+          <% if (user.username == resume.owner || user.username == TopAdmin) { %>
             <a class="btn btn-primary btn-lg" href="/api/Resumes/delete/<%= resume._id %>">Delete</a>
             <br>
           <% }%>

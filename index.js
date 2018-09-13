@@ -9,7 +9,6 @@ const express = require('express');
 const bodyParser = require("body-parser");
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const exphbs = require('express-handlebars');
 const expressValidator = require('express-validator');
 const flash = require('connect-flash');
 const session = require('express-session');
@@ -31,7 +30,7 @@ const app = express();
 app.set('view engine', 'ejs');
 app.set('views', './views'); //all templates here
 
-
+//use node package
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
 app.use(express.static('public'));
@@ -84,7 +83,7 @@ app.use('/api/users', usersRouter);
 app.use('/', homeRouter);
 
 //connect to server
-mongoose.connect('mongodb://localhost/RoastMyResume').then(() => console.log('Connected to database')).catch((err) => console.error('Could not connect to mongodb', err));
+mongoose.connect(process.env.DB).then(() => console.log('Connected to database')).catch((err) => console.error('Could not connect to mongodb', err));
 
 //listen on express server
 const port = process.env.PORT || 3000;
