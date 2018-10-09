@@ -132,7 +132,7 @@ router.post('/', upload.single("image"), auth, async (req, res) => {
       resume = await resume.save();
       console.log(process.env.TopAdmin);
       res.render("item-page/item", {resume: resume, TopAdmin: process.env.TopAdmin});
-    }, {public_id: 'single_page_pdf'});
+    }, {public_id: resume.name});
   }
 });
 
